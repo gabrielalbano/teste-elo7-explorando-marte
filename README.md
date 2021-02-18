@@ -4,7 +4,7 @@ Projeto de programação que simula de forma simples a exploração de uma área
 
 ## Funcionamento:
 
-Cada sonda é inserida na área apontando para uma direção (norte, leste, oeste ou sul), e dada essa posição inicial e uma sequência de movimentos (virar 90 graus para a esquerda, para a direita, ou mover-se um ponto a frente), o programa deve retornar a posição final da sonda.
+Cada sonda é inserida na área apontando para uma direção (norte, leste, oeste ou sul). Dada essa posição inicial e uma sequência de movimentos (virar 90 graus para a esquerda, para a direita, ou mover-se um ponto a frente), o programa deve retornar a posição final da sonda.
 
 ## Entrada:
 
