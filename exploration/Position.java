@@ -17,21 +17,43 @@ public class Position {
     return this.y;
   }
 
-  public Position changePosition(Direction dir) {
-    // Se disponível, move a sonda um espaço a frente, se não, vira à esquerda até
-    // encontrar um (no máximo 4 vezes)
+  public Position changePosition(Probe probe, Direction dir) {
+    // Move a sonda um espaço a frente relativo à sua direção se houver espaço
+    // disponivel, se não, vira à esquerda até encontrar um
+    int new_x = this.x;
+    int new_y = this.y;
+
     switch (dir) {
       case NORTH:
-        return new Position(this.x, this.y + 1);
+        new_y += 1;
+        break;
       case EAST:
-        return new Position(this.x + 1, this.y);
+        new_x += 1;
+        break;
       case SOUTH:
-        return new Position(this.x, this.y - 1);
+        new_y -= 1;
+        break;
       case WEST:
-        return new Position(this.x - 1, this.y);
+        new_x -= 1;
+        break;
       default:
         throw new IllegalArgumentException();
     }
+
+    if (!probe.getField().isAvailableSpace(new_x, new_y)) {
+      Position new_position = handleUnavailableSpace(probe, new_x, new_y);
+      new_x = new_position.getX();
+      new_y = new_position.getY();
+    }
+
+    return new Position(new_x, new_y);
+  }
+
+  public Position handleUnavailableSpace(Probe probe, int x, int y) {
+    Direction dir = probe.getDirection();
+    probe.setDirection(dir.turnLeft());
+    Position new_position = changePosition(probe, probe.getDirection());
+    return new_position;
   }
 
 }

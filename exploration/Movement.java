@@ -21,13 +21,16 @@ public enum Movement {
     throw new IllegalArgumentException();
   }
 
+  // realiza o movimento pedido de acordo com o comando dado
+  // a posição muda apenas se o comando for MOVE_FORWARD
   public void doMovement(Probe probe) {
     Direction dir = probe.getDirection();
+
     switch (this) {
       case MOVE_FORWARD:
         probe.setDirection(dir.moveFoward());
         Position current_position = probe.getPosition();
-        Position new_position = current_position.changePosition(dir);
+        Position new_position = current_position.changePosition(probe, dir);
         probe.setPosition(new_position);
         break;
       case LEFT:

@@ -54,6 +54,7 @@ public enum Direction {
   }
 
   public Direction moveFoward() {
+    // A sonda continua na mesma direção
     return this;
   }
 

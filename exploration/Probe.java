@@ -6,9 +6,9 @@ public class Probe {
   private Direction direction;
 
   public Probe(Position position, Direction direction, Field field) {
+    this.field = field;
     this.position = position;
     this.direction = direction;
-    this.field = field;
   }
 
   public void setPosition(Position position) {
@@ -17,6 +17,12 @@ public class Probe {
 
   public void setDirection(Direction direction) {
     this.direction = direction;
+  }
+
+  public void occupyPosition(Position position) {
+    int i = position.getX();
+    int j = position.getY();
+    this.field.coordinates[i][j] = 'x';
   }
 
   public Position getPosition() {
