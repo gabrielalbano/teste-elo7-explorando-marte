@@ -1,7 +1,32 @@
 package exploration;
 
+import java.util.Optional;
+
 public enum Movement {
-  MOVE_FORWARD('M'), LEFT('L'), RIGHT('R');
+  MOVE_FORWARD('M') {
+    @Override
+    public void doMovement(Probe probe) {
+      Direction dir = probe.getDirection();
+      probe.setDirection(dir.moveForward());
+      Position currentPosition = probe.getPosition();
+      Position newPosition = currentPosition.changePosition(probe, dir);
+      probe.setPosition(newPosition);
+    }
+  },
+  LEFT('L') {
+    @Override
+    public void doMovement(Probe probe) {
+      Direction dir = probe.getDirection();
+      probe.setDirection(dir.turnLeft());
+    }
+  },
+  RIGHT('R') {
+    @Override
+    public void doMovement(Probe probe) {
+      Direction dir = probe.getDirection();
+      probe.setDirection(dir.turnRight());
+    }
+  };
 
   private final char shortCode;
 
@@ -9,39 +34,16 @@ public enum Movement {
     this.shortCode = code;
   }
 
-  public char getMovementCode() {
-    return this.shortCode;
-  }
-
-  public static Movement getMovement(char shortCode) {
+  public static Optional<Movement> getMovement(char shortCode) {
     for (Movement m : Movement.values()) {
       if (m.shortCode == shortCode)
-        return m;
+        return Optional.of(m);
     }
-    throw new IllegalArgumentException();
+    return Optional.empty();
   }
 
   // realiza o movimento pedido de acordo com o comando dado
   // a posição muda apenas se o comando for MOVE_FORWARD
-  public void doMovement(Probe probe) {
-    Direction dir = probe.getDirection();
-
-    switch (this) {
-      case MOVE_FORWARD:
-        probe.setDirection(dir.moveFoward());
-        Position current_position = probe.getPosition();
-        Position new_position = current_position.changePosition(probe, dir);
-        probe.setPosition(new_position);
-        break;
-      case LEFT:
-        probe.setDirection(dir.turnLeft());
-        break;
-      case RIGHT:
-        probe.setDirection(dir.turnRight());
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
+  public abstract void doMovement(Probe probe);
 
 }

@@ -1,7 +1,9 @@
 package exploration;
 
+import java.util.Optional;
+
 public class Probe {
-  private Field field;
+  private final Field field;
   private Position position;
   private Direction direction;
 

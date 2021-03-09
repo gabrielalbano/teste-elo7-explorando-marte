@@ -1,7 +1,49 @@
 package exploration;
 
+import java.util.*;
+
 public enum Direction {
-  NORTH('N'), EAST('E'), WEST('W'), SOUTH('S');
+  NORTH('N') {
+    @Override
+    public Direction turnLeft() {
+      return WEST;
+    }
+    @Override
+    public Direction turnRight() {
+      return EAST;
+    }
+  },
+
+  EAST('E') {
+    @Override
+    public Direction turnLeft() {
+      return NORTH;
+    }
+    @Override
+    public Direction turnRight() {
+      return SOUTH;
+    }
+
+  }, WEST('W') {
+    @Override
+    public Direction turnLeft() {
+      return SOUTH;
+    }
+    @Override
+    public Direction turnRight() {
+      return NORTH;
+    }
+
+  }, SOUTH('S') {
+    @Override
+    public Direction turnLeft() {
+      return EAST;
+    }
+    @Override
+    public Direction turnRight() {
+      return WEST;
+    }
+  };
 
   private final char shortCode;
 
@@ -13,47 +55,19 @@ public enum Direction {
     return this.shortCode;
   }
 
-  public static Direction getDirection(char shortCode) {
+  public static Optional<Direction> getDirection(char shortCode) {
     for (Direction m : Direction.values()) {
       if (m.shortCode == shortCode)
-        return m;
+        return Optional.of(m);
     }
-    throw new IllegalArgumentException();
+    return Optional.empty();
   }
 
-  public Direction turnLeft() {
-    // Vira a sonda 90 graus para a esquerda dependendo da sua direção
-    switch (this) {
-      case NORTH:
-        return WEST;
-      case EAST:
-        return NORTH;
-      case SOUTH:
-        return EAST;
-      case WEST:
-        return SOUTH;
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
+  public abstract Direction turnLeft();
 
-  public Direction turnRight() {
-    // Vira a sonda 90 graus para a direita dependendo da sua direção
-    switch (this) {
-      case NORTH:
-        return EAST;
-      case EAST:
-        return SOUTH;
-      case SOUTH:
-        return WEST;
-      case WEST:
-        return NORTH;
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
+  public abstract Direction turnRight();
 
-  public Direction moveFoward() {
+  public Direction moveForward() {
     // A sonda continua na mesma direção
     return this;
   }

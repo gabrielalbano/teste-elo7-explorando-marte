@@ -1,20 +1,21 @@
+import java.util.Optional;
 import java.util.Scanner;
 import exploration.*;
 
 public class ExploringMars {
 
   public static void main(String[] args) {
-    int field_x, field_y;
+    int fieldTopX, fieldTopY;
 
     try (Scanner reader = new Scanner(System.in)) {
       // leitura de dados da coordenada do canto superior direito do campo
       System.out.println("Insira a coordenada do canto direito superior do campo: ");
-      field_x = reader.nextInt();
-      field_y = reader.nextInt();
+      fieldTopX = reader.nextInt();
+      fieldTopY = reader.nextInt();
       reader.nextLine(); // processa o \n não consumido pelo nextInt anterior
 
       // cria instância do campo com a coordenada dadas
-      Field field = new Field(field_x, field_y);
+      Field field = new Field(fieldTopX, fieldTopY);
 
       // implantação de sondas até que o usuário decida parar
       while (true) {
@@ -27,17 +28,18 @@ public class ExploringMars {
         }
 
         // atribuição de variáveis
-        int probe_x = Integer.parseInt(input.split(" ")[0]);
-        int probe_y = Integer.parseInt(input.split(" ")[1]);
+        int probeX = Integer.parseInt(input.split(" ")[0]);
+        int probeY = Integer.parseInt(input.split(" ")[1]);
         char dir = input.split(" ")[2].charAt(0);
 
         // criação de instância da sonda e da sequência de instruções
-        Direction direction = Direction.getDirection(dir);
-        Position position = new Position(probe_x, probe_y);
+        Optional<Direction> optDir = Direction.getDirection(dir);
+        Direction direction = optDir.orElseThrow(IllegalArgumentException::new);
+        Position position = new Position(probeX, probeY);
 
         // insere sonda no campo se o espaço não estiver ocupado ou estiver fora dos
         // limites
-        if (field.isAvailableSpace(probe_x, probe_y)) {
+        if (field.isAvailableSpace(probeX, probeY)) {
           Probe probe = new Probe(position, direction, field);
           Instructions instructions = new Instructions(reader.nextLine(), probe);
 

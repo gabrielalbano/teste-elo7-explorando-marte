@@ -1,20 +1,23 @@
 package exploration;
 
-public class Instructions {
-  private Probe probe;
-  private String instruction_list;
+import java.util.Optional;
 
-  public Instructions(String instruction_list, Probe probe) {
-    this.instruction_list = instruction_list;
+public class Instructions {
+  private final Probe probe;
+  private final String instructionList;
+
+  public Instructions(String instructionList, Probe probe) {
+    this.instructionList = instructionList;
     this.probe = probe;
   }
 
   public void processInstructions() {
     // Processa a string de instruções char a char
-    for (int i = 0; i < this.instruction_list.length(); i++) {
-      char inst = this.instruction_list.charAt(i);
+    for (int i = 0; i < this.instructionList.length(); i++) {
+      char inst = this.instructionList.charAt(i);
 
-      Movement move = Movement.getMovement(inst);
+      Optional<Movement> optMove = Movement.getMovement(inst);
+      Movement move = optMove.orElseThrow(IllegalArgumentException::new);
       move.doMovement(probe);
     }
 

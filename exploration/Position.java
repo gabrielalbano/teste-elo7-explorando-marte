@@ -1,8 +1,10 @@
 package exploration;
 
+import java.util.Optional;
+
 public class Position {
-  private int x;
-  private int y;
+  private final int x;
+  private final int y;
 
   public Position(int x, int y) {
     this.x = x;
@@ -20,40 +22,40 @@ public class Position {
   public Position changePosition(Probe probe, Direction dir) {
     // Move a sonda um espaço a frente relativo à sua direção se houver espaço
     // disponivel, se não, vira à esquerda até encontrar um
-    int new_x = this.x;
-    int new_y = this.y;
+    int newX = this.x;
+    int newY = this.y;
 
     switch (dir) {
       case NORTH:
-        new_y += 1;
+        newY += 1;
         break;
       case EAST:
-        new_x += 1;
+        newX += 1;
         break;
       case SOUTH:
-        new_y -= 1;
+        newY -= 1;
         break;
       case WEST:
-        new_x -= 1;
+        newX -= 1;
         break;
       default:
         throw new IllegalArgumentException();
     }
 
-    if (!probe.getField().isAvailableSpace(new_x, new_y)) {
-      Position new_position = handleUnavailableSpace(probe, new_x, new_y);
-      new_x = new_position.getX();
-      new_y = new_position.getY();
+    if (!probe.getField().isAvailableSpace(newX, newY)) {
+      Position newPosition = handleUnavailableSpace(probe);
+      newX = newPosition.getX();
+      newY = newPosition.getY();
     }
 
-    return new Position(new_x, new_y);
+    return new Position(newX, newY);
   }
 
-  public Position handleUnavailableSpace(Probe probe, int x, int y) {
-    Direction dir = probe.getDirection();
+  public Position handleUnavailableSpace(Probe probe) {
+    Optional<Direction> optDir = Optional.ofNullable(probe.getDirection());
+    Direction dir = optDir.orElseThrow(IllegalArgumentException::new);
     probe.setDirection(dir.turnLeft());
-    Position new_position = changePosition(probe, probe.getDirection());
-    return new_position;
+    return changePosition(probe, dir);
   }
 
 }
